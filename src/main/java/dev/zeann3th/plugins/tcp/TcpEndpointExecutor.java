@@ -3,7 +3,7 @@ package dev.zeann3th.plugins.tcp;
 import dev.zeann3th.stresspilot.dto.endpoint.RequestLogDTO;
 import dev.zeann3th.stresspilot.entity.EndpointEntity;
 import dev.zeann3th.stresspilot.service.executor.EndpointExecutorService;
-import dev.zeann3th.stresspilot.service.executor.EndpointExecutorUtils; // Import static utils
+import dev.zeann3th.stresspilot.common.utils.DataUtils;
 import okhttp3.CookieJar;
 import org.pf4j.Extension;
 
@@ -24,10 +24,10 @@ public class TcpEndpointExecutor implements EndpointExecutorService {
     public RequestLogDTO execute(EndpointEntity endpoint, Map<String, Object> environment, CookieJar cookieJar) {
         // 1. Process variables in URL (host:port) and Body
         String rawUrl = endpoint.getUrl();
-        String processedUrl = EndpointExecutorUtils.replaceVariables(rawUrl, environment);
+        String processedUrl = DataUtils.replaceVariables(rawUrl, environment);
 
         String rawBody = endpoint.getBody();
-        String processedBody = EndpointExecutorUtils.replaceVariables(rawBody, environment);
+        String processedBody = DataUtils.replaceVariables(rawBody, environment);
 
         // 2. Parse host and port from the processed URL
         String[] parts = processedUrl.split(":");
