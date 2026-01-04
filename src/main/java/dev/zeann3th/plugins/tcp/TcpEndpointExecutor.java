@@ -1,6 +1,6 @@
 package dev.zeann3th.plugins.tcp;
 
-import dev.zeann3th.stresspilot.dto.endpoint.RequestLogDTO;
+import dev.zeann3th.stresspilot.dto.endpoint.EndpointResponseDTO;
 import dev.zeann3th.stresspilot.entity.EndpointEntity;
 import dev.zeann3th.stresspilot.service.executor.EndpointExecutorService;
 import dev.zeann3th.stresspilot.common.utils.DataUtils;
@@ -21,7 +21,7 @@ public class TcpEndpointExecutor implements EndpointExecutorService {
     }
 
     @Override
-    public RequestLogDTO execute(EndpointEntity endpoint, Map<String, Object> environment, CookieJar cookieJar) {
+    public EndpointResponseDTO execute(EndpointEntity endpoint, Map<String, Object> environment, CookieJar cookieJar) {
         // 1. Process variables in URL (host:port) and Body
         String rawUrl = endpoint.getUrl();
         String processedUrl = DataUtils.replaceVariables(rawUrl, environment);
@@ -58,7 +58,7 @@ public class TcpEndpointExecutor implements EndpointExecutorService {
                     if (!in.ready()) break;
                 }
 
-                return RequestLogDTO.builder()
+                return EndpointResponseDTO.builder()
                         .success(true)
                         .responseTimeMs(System.currentTimeMillis() - startTime)
                         .rawResponse(response.toString())
@@ -66,7 +66,7 @@ public class TcpEndpointExecutor implements EndpointExecutorService {
                         .build();
             }
         } catch (Exception e) {
-            return RequestLogDTO.builder()
+            return EndpointResponseDTO.builder()
                     .success(false)
                     .responseTimeMs(System.currentTimeMillis() - startTime)
                     .message("TCP Error: " + e.getMessage())
